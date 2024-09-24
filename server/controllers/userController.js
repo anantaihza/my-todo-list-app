@@ -59,6 +59,27 @@ class UserController {
       next(error);
     }
   }
+
+  static async getUserLogged(req, res, next) {
+    try {
+      const { id } = req.user;
+      const user = await User.findByPk(id, {
+        attributes: ['id', 'name', 'email'],
+      });
+
+      res.status(200).json({
+        status: 'Success',
+        message: 'User retrieved',
+        data: {
+          id: user.id,
+          name: user.name,
+          email: user.email
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = UserController;
