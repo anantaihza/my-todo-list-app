@@ -22,7 +22,7 @@ function errorHandler(err, req, res, next) {
     case 'SequelizeValidationError':
     case 'SequelizeUniqueConstraintError':
       status = 400;
-      message = err.errors.map((data) => data.message);
+      message = err.errors[0].message;
       break;
 
     case 'BadRequest':
