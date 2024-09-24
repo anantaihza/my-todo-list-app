@@ -15,7 +15,6 @@ class UserController {
       });
 
       res.status(201).json({
-        status: 'Success',
         message: 'User created',
         data: {
           name: user.name,
@@ -49,7 +48,6 @@ class UserController {
       const access_token = signToken({ id: findUser.id });
 
       res.status(200).json({
-        status: 'Success',
         message: 'User logged successfully',
         data: {
           access_token,
@@ -68,7 +66,6 @@ class UserController {
       });
 
       res.status(200).json({
-        status: 'Success',
         message: 'User retrieved',
         data: {
           id: user.id,
