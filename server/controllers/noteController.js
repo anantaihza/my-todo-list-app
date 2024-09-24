@@ -85,9 +85,6 @@ class NoteController {
   static async deleteNotes(req, res, next) {
     try {
       const { note_id } = req.params;
-      const note = await Note.findByPk(note_id);
-
-      if (!note) throw { name: 'NotFound' };
 
       await Note.destroy({
         where: {
@@ -108,9 +105,6 @@ class NoteController {
   static async patchArchive(req, res, next) {
     try {
       const { note_id } = req.params;
-      const note = await Note.findByPk(note_id);
-
-      if (!note) throw { name: 'NotFound' };
 
       await Note.update(
         { archived: true },
@@ -134,9 +128,6 @@ class NoteController {
   static async patchUnarchive(req, res, next) {
     try {
       const { note_id } = req.params;
-      const note = await Note.findByPk(note_id);
-
-      if (!note) throw { name: 'NotFound' };
 
       await Note.update(
         { archived: false },
