@@ -1,20 +1,23 @@
 <script setup>
+import { formatDate } from '@/helpers/formatDate';
+
+const props = defineProps({
+  todo: Object,
+  onDelete: Function
+})
 
 </script>
 
 <template>
-  <div class="bg-[#FFF6D9] px-10 py-8 rounded-2xl flex flex-col lg:flex-row gap-5 justify-between items-center mt-5">
+  <div class="bg-[#FFF6D9] px-10 py-8 rounded-2xl flex flex-col lg:flex-row gap-5 justify-between items-center">
     <div class="w-full lg:w-2/3">
-      <h2 class="font-bold text-2xl">Membeli Peralatan</h2>
-      <h6 class="text-gray-500 font-medium">26 September 2024</h6>
-      <p class="mt-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia voluptas libero quisquam
-        assumenda
-        necessitatibus distinctio maxime nihil nesciunt dolor consequuntur voluptates iusto explicabo, culpa obcaecati,
-        magni quod dolorem recusandae eveniet!</p>
+      <h2 class="font-bold text-2xl">{{ todo?.title }}</h2>
+      <h6 class="text-gray-500 font-medium">{{ formatDate(todo?.createdAt) }}</h6>
+      <p class="mt-3">{{ todo?.body }}</p>
     </div>
     <div class="flex gap-4 w-full lg:w-1/3 justify-end">
       <div class="tooltip" data-tip="Delete todo">
-        <button class="btn btn-outline rounded-full">
+        <button class="btn btn-outline rounded-full" @click="onDelete(todo.id)">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-4">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -23,9 +26,6 @@
           <span class="lg:hidden">Delete</span>
         </button>
       </div>
-
-
-
     </div>
   </div>
 </template>

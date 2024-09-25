@@ -1,5 +1,35 @@
 <script setup>
 import Navbar from '@/components/Navbar.vue';
+import axios from '../config/axiosInstance';
+import { toast } from 'vue3-toastify';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
+const title = ref("")
+const body = ref("")
+
+const addTodo = async () => {
+  try {
+    const { data } = await axios({
+      method: "POST",
+      url: "/notes",
+      headers: {
+        Authorization: `Bearer ${localStorage.access_token}`
+      },
+      data: {
+        title: title.value,
+        body: body.value
+      }
+    })
+
+    toast.success(data.message)
+    router.push("/")
+  } catch (error) {
+    console.log(error)
+    toast.error(error.response.data.message)
+  }
+}
 </script>
 
 
@@ -17,12 +47,12 @@ import Navbar from '@/components/Navbar.vue';
         <li>Add Todo</li>
       </ul>
     </div>
-    <form class="mt-10">
+    <form class="mt-10" @submit.prevent="addTodo">
       <label class="form-control w-full mb-3">
         <div class="label">
           <span class="label-text">Title</span>
         </div>
-        <input type="text" placeholder="Type here"
+        <input type="text" placeholder="Type here" v-model="title"
           class="input input-bordered w-full rounded-full focus:outline-[#FE9345] p-6" />
       </label>
       <label class="form-control mb-3">
@@ -30,8 +60,7 @@ import Navbar from '@/components/Navbar.vue';
           <span class="label-text">Description</span>
         </div>
         <textarea class="textarea textarea-bordered h-24 rounded-2xl focus:outline-[#FE9345] px-5 py-3"
-          placeholder="Description todo"></textarea>
-
+          placeholder="Description todo" v-model="body"></textarea>
       </label>
 
       <div class="flex justify-end">

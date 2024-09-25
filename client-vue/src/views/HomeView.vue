@@ -1,6 +1,66 @@
 <script setup>
+import axios from '../config/axiosInstance';
 import CardActive from '@/components/CardActive.vue';
 import Navbar from '@/components/Navbar.vue';
+import { onMounted, ref } from 'vue';
+import { toast } from 'vue3-toastify';
+
+const todos = ref([])
+
+const fetchTodo = async () => {
+  try {
+    const { data } = await axios({
+      method: "GET",
+      url: "/notes",
+      headers: {
+        Authorization: `Bearer ${localStorage.access_token}`
+      }
+    })
+
+    todos.value = data?.data
+    // console.log(data.data)
+  } catch (error) {
+    toast.error(error.response.data.message)
+  }
+}
+
+onMounted(() => {
+  fetchTodo()
+});
+
+const onDone = async (note_id) => {
+  try {
+    const { data } = await axios({
+      method: "PATCH",
+      url: `/notes/${note_id}/archive`,
+      headers: {
+        Authorization: `Bearer ${localStorage.access_token}`
+      }
+    })
+
+    toast.success(data.message)
+    fetchTodo()
+  } catch (error) {
+    toast.error(error.response.data.message)
+  }
+}
+
+const onDelete = async (note_id) => {
+  try {
+    const { data } = await axios({
+      method: "DELETE",
+      url: `/notes/${note_id}`,
+      headers: {
+        Authorization: `Bearer ${localStorage.access_token}`
+      }
+    })
+
+    toast.success(data.message)
+    fetchTodo()
+  } catch (error) {
+    toast.error(error.response.data.message)
+  }
+}
 
 </script>
 
@@ -18,10 +78,18 @@ import Navbar from '@/components/Navbar.vue';
       </RouterLink>
     </div>
 
-    <div class="my-10">
-      <CardActive />
-      <CardActive />
+    <div v-if="!todos.length">
+      <div class="flex flex-col justify-center items-center mt-10">
+        <img class="w-[60%] lg:w-[40%] xl:w-[30%]" src="/Notebook-bro.svg" alt="">
+        <h3 class="font-bold text-xl text-gray-400">Don't have a todo list yet</h3>
+      </div>
     </div>
+    <div v-else>
+      <div v-for="todo in todos" :key="todo.id" class="my-10">
+        <CardActive :todo="todo" :onDone="onDone" :onDelete="onDelete" />
+      </div>
+    </div>
+
 
 
   </div>
