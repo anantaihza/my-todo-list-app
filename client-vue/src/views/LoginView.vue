@@ -1,12 +1,30 @@
 <script setup>
+import axios from '../config/axiosInstance';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { toast } from "vue3-toastify";
 
+const router = useRouter()
 const email = ref("")
 const password = ref("")
 
 const onLogin = async () => {
-  toast.info("test")
+  try {
+    const { data } = await axios({
+      method: "POST",
+      url: "/login",
+      data: {
+        email: email.value,
+        password: password.value
+      }
+    })
+    // console.log(data.data)
+    localStorage.setItem("access_token", data.data.access_token)
+    toast.info(data.message)
+    router.push("/")
+  } catch (error) {
+    toast.error(error.response.data.message)
+  }
 }
 
 </script>
