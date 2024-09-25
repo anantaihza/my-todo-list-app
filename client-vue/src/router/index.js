@@ -12,31 +12,31 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
-      meta: { requiresAuth: false }
+      meta: { requiresAuth: false, title: 'Login | Todo list' }
     },
     {
       path: '/register',
       name: 'register',
       component: RegisterView,
-      meta: { requiresAuth: false }
+      meta: { requiresAuth: false, title: 'Register | Todo list' }
     },
     {
       path: '/',
       name: 'home',
       component: HomeView,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true, title: 'Home | Todo list' }
     },
     {
       path: '/archived',
       name: 'archived',
       component: ArchivedView,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true, title: 'Archived | Todo list' }
     },
     {
       path: '/add-todo',
       name: 'add-todo',
       component: AddTodoView,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true, title: 'Add | Todo list' }
     }
   ]
 })
@@ -48,6 +48,7 @@ router.beforeEach((to, from, next) => {
   } else if (to.name === 'login' && token) {
     next({ name: 'home' })
   } else {
+    document.title = to.meta.title || 'Todo List'
     next()
   }
 })

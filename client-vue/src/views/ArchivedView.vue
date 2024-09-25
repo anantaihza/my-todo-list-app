@@ -1,23 +1,22 @@
 <script setup>
-import axios from '../config/axiosInstance';
-import { toast } from 'vue3-toastify';
-import CardArchived from '@/components/CardArchived.vue';
-import Navbar from '@/components/Navbar.vue';
-import { onMounted, ref } from 'vue';
+import axios from '../config/axiosInstance'
+import { toast } from 'vue3-toastify'
+import CardArchived from '@/components/CardArchived.vue'
+import Navbar from '@/components/NavbarGlobal.vue'
+import { onMounted, ref } from 'vue'
 
 const todosArchived = ref([])
 
 const fetchArchived = async () => {
   try {
     const { data } = await axios({
-      method: "GET",
-      url: "/notes/archived",
+      method: 'GET',
+      url: '/notes/archived',
       headers: {
         Authorization: `Bearer ${localStorage.access_token}`
       }
     })
 
-    // console.log(data.data)
     todosArchived.value = data?.data
   } catch (error) {
     toast.info(error.response.data.message)
@@ -26,12 +25,12 @@ const fetchArchived = async () => {
 
 onMounted(() => {
   fetchArchived()
-});
+})
 
 const onDelete = async (note_id) => {
   try {
     const { data } = await axios({
-      method: "DELETE",
+      method: 'DELETE',
       url: `/notes/${note_id}`,
       headers: {
         Authorization: `Bearer ${localStorage.access_token}`
@@ -45,7 +44,6 @@ const onDelete = async (note_id) => {
     toast.error(error.response.data.message)
   }
 }
-
 </script>
 
 <template>
@@ -53,7 +51,6 @@ const onDelete = async (note_id) => {
   <div class="container mx-auto px-10 lg:px-32 mt-20">
     <div class="flex gap-5 justify-between">
       <h1 class="font-black text-4xl">Archived Todos</h1>
-
     </div>
     <div class="breadcrumbs text-sm">
       <ul>
@@ -66,7 +63,7 @@ const onDelete = async (note_id) => {
 
     <div v-if="!todosArchived.length">
       <div class="flex flex-col justify-center items-center mt-10">
-        <img class="w-[60%] lg:w-[40%] xl:w-[30%]" src="/Notebook-bro.svg" alt="">
+        <img class="w-[60%] lg:w-[40%] xl:w-[30%]" src="/Notebook-bro.svg" alt="" />
         <h3 class="font-bold text-xl text-gray-400">Don't have a todo list yet</h3>
       </div>
     </div>
@@ -75,8 +72,6 @@ const onDelete = async (note_id) => {
         <CardArchived :todo="todo" :onDelete="onDelete" />
       </div>
     </div>
-
-
   </div>
 </template>
 
