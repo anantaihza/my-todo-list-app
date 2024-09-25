@@ -8,9 +8,11 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const title = ref('')
 const body = ref('')
+const isLoading = ref(false)
 
 const addTodo = async () => {
   try {
+    isLoading.value = true
     const { data } = await axios({
       method: 'POST',
       url: '/notes',
@@ -26,8 +28,9 @@ const addTodo = async () => {
     toast.success(data.message)
     router.push('/')
   } catch (error) {
-    console.log(error)
     toast.error(error.response.data.message)
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
@@ -72,20 +75,30 @@ const addTodo = async () => {
       </label>
 
       <div class="flex justify-end">
-        <button type="submit" class="btn btn-lg rounded-full bg-[#FE9345] text-white text-md mt-10">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="size-6"
+        <div v-if="isLoading">
+          <button class="btn btn-lg rounded-full bg-[#FE9345] text-white text-md mt-10" disabled>
+            <span class="loading loading-spinner loading-md"></span>
+          </button>
+        </div>
+        <div v-else>
+          <button
+            type="submit"
+            class="btn btn-lg rounded-full bg-[#FE9345] text-white text-md mt-10"
           >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-          </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
 
-          <span>Add</span>
-        </button>
+            <span>Add</span>
+          </button>
+        </div>
       </div>
     </form>
   </div>

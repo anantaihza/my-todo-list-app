@@ -6,9 +6,11 @@ import Navbar from '@/components/NavbarGlobal.vue'
 import { onMounted, ref } from 'vue'
 
 const todosArchived = ref([])
+const isLoading = ref(false)
 
 const fetchArchived = async () => {
   try {
+    isLoading.value = true
     const { data } = await axios({
       method: 'GET',
       url: '/notes/archived',
@@ -20,6 +22,8 @@ const fetchArchived = async () => {
     todosArchived.value = data?.data
   } catch (error) {
     toast.info(error.response.data.message)
+  } finally {
+    isLoading.value = false
   }
 }
 
@@ -61,15 +65,22 @@ const onDelete = async (note_id) => {
       </ul>
     </div>
 
-    <div v-if="!todosArchived.length">
-      <div class="flex flex-col justify-center items-center mt-10">
-        <img class="w-[60%] lg:w-[40%] xl:w-[30%]" src="/Notebook-bro.svg" alt="" />
-        <h3 class="font-bold text-xl text-gray-400">Don't have a todo list yet</h3>
+    <div v-if="isLoading">
+      <div class="w-full h-96 flex justify-center items-center">
+        <span class="loading loading-spinner loading-lg"></span>
       </div>
     </div>
     <div v-else>
-      <div v-for="todo in todosArchived" :key="todo.id" class="my-10">
-        <CardArchived :todo="todo" :onDelete="onDelete" />
+      <div v-if="!todosArchived.length">
+        <div class="flex flex-col justify-center items-center mt-10">
+          <img class="w-[60%] lg:w-[40%] xl:w-[30%]" src="/Notebook-bro.svg" alt="" />
+          <h3 class="font-bold text-xl text-gray-400">Don't have a todo list yet</h3>
+        </div>
+      </div>
+      <div v-else>
+        <div v-for="todo in todosArchived" :key="todo.id" class="my-10">
+          <CardArchived :todo="todo" :onDelete="onDelete" />
+        </div>
       </div>
     </div>
   </div>

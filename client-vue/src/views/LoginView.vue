@@ -7,9 +7,11 @@ import { toast } from 'vue3-toastify'
 const router = useRouter()
 const email = ref('')
 const password = ref('')
+const isLoading = ref(false)
 
 const onLogin = async () => {
   try {
+    isLoading.value = true
     const { data } = await axios({
       method: 'POST',
       url: '/login',
@@ -23,6 +25,8 @@ const onLogin = async () => {
     router.push('/')
   } catch (error) {
     toast.error(error.response.data.message)
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
@@ -58,12 +62,19 @@ const onLogin = async () => {
           />
         </label>
 
-        <button
-          type="submit"
-          class="btn btn-lg btn-block rounded-full bg-[#FE9345] text-white mt-10"
-        >
-          Login
-        </button>
+        <div v-if="isLoading">
+          <button class="btn btn-lg btn-block rounded-full bg-[#FE9345] text-white mt-10" disabled>
+            <span class="loading loading-spinner loading-md"></span>
+          </button>
+        </div>
+        <div v-else>
+          <button
+            type="submit"
+            class="btn btn-lg btn-block rounded-full bg-[#FE9345] text-white mt-10"
+          >
+            Login
+          </button>
+        </div>
       </form>
       <p class="mt-5">
         Don't have an account?

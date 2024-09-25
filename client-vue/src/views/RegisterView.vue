@@ -8,9 +8,11 @@ const router = useRouter()
 const name = ref('')
 const email = ref('')
 const password = ref('')
+const isLoading = ref(false)
 
 const onRegister = async () => {
   try {
+    isLoading.value = true
     const { data } = await axios({
       method: 'POST',
       url: '/register',
@@ -21,12 +23,12 @@ const onRegister = async () => {
       }
     })
 
-    console.log(data)
     toast.info(data.message)
     router.push('/login')
   } catch (error) {
-    console.log(error.response.data.message)
     toast.error(error.response.data.message)
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
@@ -74,12 +76,19 @@ const onRegister = async () => {
           />
         </label>
 
-        <button
-          type="submit"
-          class="btn btn-lg btn-block rounded-full bg-[#FE9345] text-white mt-10"
-        >
-          Register
-        </button>
+        <div v-if="isLoading">
+          <button class="btn btn-lg btn-block rounded-full bg-[#FE9345] text-white mt-10" disabled>
+            <span class="loading loading-spinner loading-md"></span>
+          </button>
+        </div>
+        <div v-else>
+          <button
+            type="submit"
+            class="btn btn-lg btn-block rounded-full bg-[#FE9345] text-white mt-10"
+          >
+            Register
+          </button>
+        </div>
       </form>
       <p class="mt-5">
         Do you have an account?
