@@ -10,10 +10,11 @@ class NoteController {
             [Op.eq]: false,
           },
         },
+        order: [['createdAt', 'DESC']],
       });
 
       res.status(200).json({
-        message: 'Notes retrieved',
+        message: 'Todos retrieved',
         data: notes,
       });
     } catch (error) {
@@ -33,7 +34,7 @@ class NoteController {
       });
 
       res.status(201).json({
-        message: 'Note created',
+        message: 'Todos created',
         data: {
           id: note.id,
           title: note.title,
@@ -55,10 +56,11 @@ class NoteController {
             [Op.eq]: true,
           },
         },
+        order: [['createdAt', 'DESC']],
       });
 
       res.status(200).json({
-        message: 'Notes retrieved',
+        message: 'Todos retrieved',
         data: notes,
       });
     } catch (error) {
@@ -74,7 +76,7 @@ class NoteController {
       if (!note) throw { name: 'NotFound' };
 
       res.status(200).json({
-        message: 'Note retrieved',
+        message: 'Todos retrieved',
         data: note,
       });
     } catch (error) {
@@ -95,7 +97,7 @@ class NoteController {
       });
 
       res.status(200).json({
-        message: 'Note deleted',
+        message: 'Todos deleted',
       });
     } catch (error) {
       next(error);
@@ -118,7 +120,7 @@ class NoteController {
       );
 
       res.status(200).json({
-        message: 'Note archived',
+        message: 'Todos Done',
       });
     } catch (error) {
       next(error);
@@ -141,7 +143,7 @@ class NoteController {
       );
 
       res.status(200).json({
-        message: 'Note unarchived',
+        message: 'Todos unarchived',
       });
     } catch (error) {
       next(error);

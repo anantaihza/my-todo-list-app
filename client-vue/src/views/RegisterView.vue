@@ -1,0 +1,75 @@
+<script setup>
+import axios from '../config/axiosInstance';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { toast } from 'vue3-toastify';
+
+
+const router = useRouter()
+const name = ref("")
+const email = ref("")
+const password = ref("")
+
+const onRegister = async () => {
+  try {
+    const { data } = await axios({
+      method: "POST",
+      url: "/register",
+      data: {
+        name: name.value,
+        email: email.value,
+        password: password.value
+      }
+    })
+
+    console.log(data)
+    toast.info(data.message)
+    router.push("/login")
+  } catch (error) {
+    console.log(error.response.data.message)
+    toast.error(error.response.data.message)
+  }
+}
+</script>
+
+<template>
+  <main class="min-h-screen w-full flex">
+    <section class="w-full lg:w-[50%] flex flex-col justify-center items-center">
+      <h1 class="text-4xl font-black text-center">Register</h1>
+      <h4 class="text-3xl font-black text-[#FE9345] text-center">Welcome to Todo list</h4>
+      <form class="mt-10 w-[60%]" @submit.prevent="onRegister">
+        <label class="form-control w-full mb-3">
+          <div class="label">
+            <span class="label-text font-bold">Name</span>
+          </div>
+          <input type="text" placeholder="Type here" v-model="name"
+            class="input input-bordered w-full rounded-full focus:outline-[#FE9345] p-6" />
+        </label>
+        <label class="form-control w-full mb-3">
+          <div class="label">
+            <span class="label-text font-bold">Email</span>
+          </div>
+          <input type="email" placeholder="Type here" v-model="email"
+            class="input input-bordered w-full rounded-full focus:outline-[#FE9345] p-6" />
+        </label>
+        <label class="form-control w-full mb-3">
+          <div class="label">
+            <span class="label-text font-bold">Password</span>
+          </div>
+          <input type="password" placeholder="Type here" v-model="password"
+            class="input input-bordered w-full rounded-full focus:outline-[#FE9345] p-6" />
+        </label>
+
+        <button type="submit" class="btn btn-lg btn-block rounded-full bg-[#FE9345] text-white mt-10">Register</button>
+      </form>
+      <p class="mt-5">Do you have an account?
+        <RouterLink to="/login" class="text-[#FE9345] hover:text-gray-400">Login</RouterLink>
+      </p>
+    </section>
+    <section class="hidden w-full lg:flex lg:w-[50%] justify-center items-center">
+      <img class="w-[95%]" src="/Register-bro.svg" alt="notes image">
+    </section>
+  </main>
+</template>
+
+<style scoped></style>
