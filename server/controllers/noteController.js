@@ -4,10 +4,14 @@ const { Note } = require('../models/index');
 class NoteController {
   static async getNotes(req, res, next) {
     try {
+      const { id } = req.user;
       const notes = await Note.findAll({
         where: {
           archived: {
             [Op.eq]: false,
+          },
+          UserId: {
+            [Op.eq]: id,
           },
         },
         order: [['createdAt', 'DESC']],
@@ -50,10 +54,14 @@ class NoteController {
 
   static async getNotesArchived(req, res, next) {
     try {
+      const { id } = req.user;
       const notes = await Note.findAll({
         where: {
           archived: {
             [Op.eq]: true,
+          },
+          UserId: {
+            [Op.eq]: id,
           },
         },
         order: [['createdAt', 'DESC']],
